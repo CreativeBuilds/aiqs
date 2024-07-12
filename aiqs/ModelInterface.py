@@ -16,14 +16,16 @@ class ModelInterface():
             self.client = client
         else:
             # Make a client for Amazon Bedrock
-            self.client = boto3.client(
-                service_name="bedrock-runtime",
-                region_name=os.environ.get("AWS_REGION"),
-                aws_access_key_id=os.environ.get("AWS_ACCESS_KEY_ID"),
-                aws_secret_access_key=os.environ.get("AWS_SECRET_ACCESS_KEY"),
-                aws_session_token=os.environ.get("SESSION_TOKEN"),
-            )
-
+            try:
+                self.client = boto3.client(
+                    service_name="bedrock-runtime",
+                    region_name=os.environ.get("AWS_REGION"),
+                    aws_access_key_id=os.environ.get("AWS_ACCESS_KEY_ID"),
+                    aws_secret_access_key=os.environ.get("AWS_SECRET_ACCESS_KEY"),
+                    aws_session_token=os.environ.get("SESSION_TOKEN"),
+                )
+            except:
+                log("Failed to connect AWS client, bedrock offline\ncontinuing...")
         if cost_tracker:
             self.cost_tracker = cost_tracker
         else:
